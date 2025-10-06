@@ -1,0 +1,127 @@
+---
+title: "Part_1_AT4"
+author: "Nicholas Raharjo"
+date: "2025-09-25"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+##The file “gene_expression.tsv” contains RNA-seq count data for three samples of interest.
+
+##Read in the file, making the gene identifiers the row names. Show a table of values for the first six genes.
+library("R.utils")
+
+URL="https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/gene_expression.tsv"
+download.file(URL,destfile="gene_expression.tsv")
+cds <- read.delim("gene_expression.tsv")
+head(cds)
+
+```
+
+first the URL was given and downlaoded using the command download.file. the file is gene_expression.tsv. the file was read using the command read.delim and then the head shows the first 6 sequences of the read table. 
+
+```{r}
+##Make a new column which is the mean of the other columns. Show a table of values for the first six genes.
+library("seqinr")
+
+rownames(cds) <- cds[,1]
+
+cds <- cds[,-1]
+
+cds$mean_column <- rowMeans(cds)
+
+head(cds)
+print(head)
+```
+first we need to delete one row using the command cds <- cds[-1]and find the means of each row using rowMeans(cds) and place it on a new column called mean_column in cds. the head command shows the head of the first 6 sequences. 
+
+```{r}
+##List the 10 genes with the highest mean expression
+highestgenes <- cds[order(cds$mean_column, decreasing = TRUE), ]
+head(highestgenes, 10)
+```
+in here, the cds's mean column was ordered/sorted to be decreasing from the highest usin order on the cds$mean_column and decreasing and placed on the file highestgene. the head command shows the top 10 sequences if added = ,10.  
+```{r}
+##Determine the number of genes with a mean <10
+low_mean <- cds[which(cds$mean_column < 10),]
+nrow(low_mean)
+```
+using which command it chooses which mean in the mean_column of the cds which is < 10 and place it on the new file, low_mean. next, nrows command with low_mean shows the number of genes/rows in the file/table whihc is 35988. 
+```{r}
+##Make a histogram plot of the mean values and include it into your report.
+hist(cds$mean_column, xlab="Mean Expression",ylab="Frequency",main="Mean Gene Expression")
+
+```
+
+hist command creates a histogram inside, cds$mean_column is created in which the title is mean gene expression, y axis is frequency and x axis title is mean expression. the results shows that most of the mean expressions of the genes are about 0 which has a frequency of about 50000 or more
+```{r}
+##The file “growth_data.csv” contains measurements for tree circumference growing at two sites, control site and treatment site which were planted 20 years ago.
+
+##Import this csv file into an R object. What are the column names?
+URL="https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/growth_data.csv"
+download.file(URL,destfile="growth_data.csv")
+growth <- read.csv("growth_data.csv")
+colnames(growth)
+```
+in this section, jsut like the first part, url was copied and paste and download.file command was used to download growth_data.csv and read.csv file is to convert file into manageable data in table which is the new file=growth. colnames command is used to find the column names which are:  "Site"            "TreeID"          "Circumf_2005_cm" "Circumf_2010_cm" "Circumf_2015_cm" "Circumf_2020_cm"
+```{r}
+##Calculate the mean and standard deviation of tree circumference at the start and end of the study at both sites.
+
+
+Northeast <- growth[grep("northeast", growth$Site), ]
+Southwest <- growth[grep("southwest", growth$Site), ]
+
+mean(Northeast$Circumf_2005_cm)
+mean(Northeast$Circumf_2020_cm)
+mean(Southwest$Circumf_2005_cm)
+mean(Southwest$Circumf_2020_cm)
+
+
+sd(Northeast$Circumf_2005_cm)
+sd(Northeast$Circumf_2020_cm)
+sd(Southwest$Circumf_2005_cm)
+sd(Southwest$Circumf_2020_cm)
+
+```
+in here, two files are created for the 2 sites, Northeast and Southwest. using grep command, every data with "northeast" and "southwest" in their site rows are placed in their perspective files. 
+with the new files, mean and standard deviation was calculated from 2005 and 2020 at both sites. this is done with the mean and sd command in which mean and sd was found on the Circumf_2005_cm and Circumf_2020_cm for both sites. the result shows: 
+mean in northeast:5.292(2005) 54.228(2020)
+mean in southwest: 4.862 (2005) 45.596 (2020)
+sd in northeast:0.9140267 (2005) 25.22795 (2020) 
+sd in southwest: 1.14747 (2005) 17.87345 (2020)
+```{r}
+##Make a box plot of tree circumference at the start and end of the study at both sites.
+boxplot(Northeast$Circumf_2005_cm, Northeast$Circumf_2020_cm,
+        ylab="Circumference",
+        main="Circumference in Northeast in cm",
+        names = c("2005","2020"))
+
+boxplot(Southwest$Circumf_2005_cm, Southwest$Circumf_2020_cm,
+        ylab="Circumference",
+        main="Circumference in Southwest in cm",
+        names = c("2005","2020"))
+```
+boxplot command were used to create boxplot on the Circumf_2005_cm and Circumf_2020_cm of Northwest and Southwest.  the y axis title is circumference and main title is Circumference in Southwest in cm and the names of the data in x axis is 2005 and 2020. this results in the boxplots shown above. 
+```{r}
+##Calculate the mean growth over the last 10 years at each site.
+Northeast_difference <- Northeast$Circumf_2020_cm - Northeast$Circumf_2005_cm
+Northeast_mean_difference <- mean(Northeast_difference)
+
+Southwest_difference <- Southwest$Circumf_2020_cm - Southwest$Circumf_2005_cm
+Southwest_mean_difference <- mean(Southwest_difference)
+print(Southwest_mean_difference) 
+print(Northeast_mean_difference)
+```
+two new files called Northeast_difference and Southwest_difference was created in which the Circumf_2020_cm was subtracted by the circumf_2005_cm and the mean command was used to find the mean of both files which results in teh files being stored in Northeast_mean_difference and Southwest_mean_difference
+both means were printed which results in 40.734 cm growth mean in Southwest and 48.936 mean growth in northeast
+```{r}
+##Use the t.test to estimate the p-value that the 10 year growth is different at the two sites.
+t_test_result <- t.test(Northeast_difference, Southwest_difference)
+p_value <- t_test_result$p.value
+print(p_value)
+
+```
+a new file called t_test-result was created and the t.test command was used on Northeast_differece and Southwest_difference
+a new file called p_value was created and t_test_result$p.value was to extract p value from the t_test _result file and the p_value was printed. the rsulting p value is 0.05912009

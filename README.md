@@ -1,2 +1,6 @@
 # Applied_Bioinformatics_AT4_Part_1-
 Assessment Task 4 part 1. Importing files, data wrangling, mathematical operations, plots and saving code on GitHub The purpose of this exercise will be for you to develop skills in problem solving, using Rstudio and GitHub. You will be provided with two data files to work with: “gene_expression.tsv” and “growth_data.csv” 
+
+This is part 1 of the applied bioinformatics assessment task 4. A gene expression TSV file will be analysed first, in which it will beb read first and then mean of the rows will be calculated and a mean column was created as a new column. next the ten highest genes was found and the mean whic his smaller than 10 is also found. with this, a histogram of the mean will be made. 
+
+Next, is the analysis of tree circumference over at 2 sties from 2005 - 2020. Mean and SD of standard deviation of the circumference at both sites at the end and the beginning. A boxplot of the circumference of the bginning and end at both sites were created. and the mean difference and p valu eof both sites were calculated.  
